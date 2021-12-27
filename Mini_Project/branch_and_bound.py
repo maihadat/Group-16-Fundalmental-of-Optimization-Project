@@ -1,6 +1,13 @@
 import CPusingortools as cp
-from heapq import nsmallest
 import time
+
+def min_diff_zero(l :list):
+    minmin = 999999999
+    for i in l:
+        if i < minmin and i != 0:
+            minmin = i
+    return minmin
+
 
 def Branch(k :int):
     global f_max_opt, f, x, f_min_opt, start
@@ -13,14 +20,17 @@ def Branch(k :int):
             x[k] = v
             f[v] += d[k-1]
             if k == N:
-                if max(f) <= f_max_opt and nsmallest(2,list(set(f)))[-1] >= f_min_opt:
+                if max(f) <= f_max_opt and min_diff_zero(f) >= f_min_opt:
                     f_max_opt = max(f)
-                    f_min_opt = nsmallest(2,list(set(f)))[-1]
+                    f_min_opt = min_diff_zero(f)
+                    print(f,x)
                     z.append([f.copy(),x.copy()])
 
             else:
+                #lower bound
                 g = max(f)
-                h = nsmallest(2,list(set(f)))[-1] + (sum(d) -sum(f))
+                #upper bound
+                h = min_diff_zero(f) + (sum(d) -sum(f))
                 if g <= f_max_opt and h >= f_min_opt:
                     Branch(k+1)
             f[v] -= d[k-1]
@@ -32,6 +42,7 @@ def BranchAndBound(filename):
     global f_max_opt, f, x, f_min_opt ,d, e, s, z, N, start
     start = time.time()
     N, M, m, d, s, e = cp.input(filename)
+
     z = []
     x = [0]*(N+1)
     f = [0]*(max(e)+1)
@@ -46,15 +57,19 @@ def BranchAndBound(filename):
 
 def PrintSolution(func):
     f_max_opt, f_min_opt, z, time = func
-    for i in range(1, len(z[-1][1])):
-        print('Thửa ruộng %i cày ngày %i'%(i,z[-1][1][i]))
-    print()
-    for i in range(1, len(z[-1][0])):
-        print('Sản lượng ngày %i là %i'%(i,z[-1][0][i]))
+    print(time)
+    if len(z) != 0:
+        for i in range(1, len(z[-1][1])):
+            print('Thửa ruộng %i cày ngày %i'%(i,z[-1][1][i]))
+        print()
+        for i in range(1, len(z[-1][0])):
+            print('Sản lượng ngày %i là %i'%(i,z[-1][0][i]))
+    else:
+        print('Cannot solve')
 
 if __name__ == '__main__':
     # Tùy chỗ ông lưu file mà chỉnh directory nha
-    filename = 'MyData\data1.txt'
+    filename = 'MyData\data0.txt'
     # Dùng hàm BranchAndBound(filename) để lấy dữ liệu nha
     # BranchAndBound(filename)
     PrintSolution(BranchAndBound(filename))

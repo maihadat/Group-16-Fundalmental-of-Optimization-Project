@@ -29,7 +29,7 @@ class LapKeHoachThuHoachNongSan():
         self.__s = []
         self.__e = []
         #solution
-        [self.__x, self.__y, self.z] = [0,0,0]
+        [self.__x, self.__y, self.z, self.t] = [0, 0, 0, 0]
         self.__solution = 0
         #time
         self.time = 0
@@ -62,12 +62,12 @@ class LapKeHoachThuHoachNongSan():
         #Objective function
         model.Minimize(z-t)
 
-        return [model, x, y, z]
+        return [model, x, y, z, t]
 
     def Solver(self):
         '''tạo solver cho bài toán bằng Ortools'''
 
-        [self.__x, self.__y, self.z] = self.__Modelling()[1:]
+        [self.__x, self.__y, self.z, self.t] = self.__Modelling()[1:]
         model = self.__Modelling()[0]
 
         start = time.time()
@@ -82,6 +82,7 @@ class LapKeHoachThuHoachNongSan():
 
         if status == cp_model.OPTIMAL or status == cp_model.FEASIBLE:
             print('Thu hoạch thành công!')
+            self.t = solver.Value(self.t)
             self.z = solver.Value(self.z)
             self.__x = [solver.Value(self.__x[i]) for i in range(self.__N)]
             self.__y = [solver.Value(self.__y[i]) for i in range(max(self.__e))]
@@ -92,7 +93,7 @@ class LapKeHoachThuHoachNongSan():
                         self.__solution[j][i] = self.__d[j]
                     else:
                         self.__solution[j][i] = 0
-            return self.z, self.__x, self.__y, self.__solution, self.time
+            return self.z, self.__x, self.__y, self.__solution, self.time, self.t
         else:
             print('Thu hoạch thất bại do không đáp ứng đủ điều kiện!')
 
@@ -154,7 +155,7 @@ class LapKeHoachThuHoachNongSan():
 
 
 if __name__ == '__main__':
-    n = ''
+    n = '0'
     filename = 'MyData\data%s.txt'%(n)
     #da.export_to_txt(filename, da.GenData(50,40,25,50)) #tạo file test vs tên file như trên :)))
     N, M, m, d, s, e = input(filename)

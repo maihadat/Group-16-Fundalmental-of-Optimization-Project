@@ -122,13 +122,13 @@ def vegetables_planning(filename, print_out_plan, print_out_objective, print_out
         print()
 
     if print_out_objective is True:
-        print('Hàm tối ưu z là:', z.solution_value())
+        print('Hàm tối ưu z-t là:', z.solution_value()- t.solution_value())
         print()
 
     if print_out_time is True:
         print('Thời gian hoàn thành thuật toán là:', end-start)
         print()
-    return (z.solution_value(), end-start)
+    return (z.solution_value(), t.solution_value() ,end-start)
 
 
 vegetables_planning("MyData\data4.txt", True, True, True)
