@@ -49,7 +49,7 @@ def export_to_txt(filename,func):
 
 
 # gen ra 7 file có số ruộng lần lượt theo lst_of_N = [5, 10, 15, 25, 50, 150, 500]
-def random_gen_data_into_text():
+def random_gen_data_into_text_Dat():
     lst_of_N = [5, 10, 15, 25, 50, 150, 300]
     for i in range(1, 8):
         N = lst_of_N[i-1]
