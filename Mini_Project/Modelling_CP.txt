@@ -1,0 +1,20 @@
+Variables
+X(j) ngày thu hoạch cánh đồng j[1;N]
+Y(i) sản lượng thu hoạch ngày i[1; lastday]
+Z sản lượng tối đa một ngày
+T sản lượng tối thiểu một ngày
+
+Domain
+X(j): [1; lastday]
+Y(i): [m; M] or 0(nếu máy ko hoạt động ngày i)
+Z   : [m; M]
+T   : [m; M]
+
+Constraint
+Y(i) = sigma((X(j) = i), d(j)) # ràng buộc về sản lượng
+Z >= Y(i)  #ràng buộc độ lệch nhỏ nhất      
+T <= Y(i) và T != 0     
+
+Objective function: Z-T
+
+Solution:  Constraint Programming sử dụng Ortools

@@ -1,0 +1,35 @@
+Biến:
++X(i, j) là biến số nguyên từ 0->1 tương ứng với việc ngày thứ j có thu hoạch ruộng thứ i hay không
+ trong đó i là số chỉ ruộng(i thuộc 1->N), j là số chỉ ngày(j thuộc 1->max(e)) 
+
++Y(j) là biến số nguyên từ 0->M biểu diễn công suất của nhà máy phải hoạt động ngày hôm đó
+ trong đó j là số chỉ ngày(j thuộc 1->max(e))
+
++Z là biến số nguyên từ m->M biểu diễn công suất lớn nhất trong tất cả các ngày
+
++T là biến số nguyên từ m->M biểu diễn công suất bé nhất trong tất cả các ngày
+
++C(j) là biến số nguyên từ 0->1 tương ứng với việc ngày thứ j có thu hoạch hay ko
+ trong đó j là số chỉ ngày(j thuộc từ 1->max(e))
+
+
+
+Rằng buộc:
++con1: {sigma từ j=1 tới j=J của (x(i, j)) = 1} với mọi i thuộc N
+ Mỗi cánh đồng chỉ thu hoạch 1 lần
+
++con2: {sigma của j từ j=s(i) đến j=e(i) của (x(i, j)) = 1} với mọi i thuộc N
+ Mỗi cánh đồng i chỉ có thể thu hoạch trong những ngày thuộc khoảng s(i) đến e(i)
+
++con3: {y(j) <= c(j)*L và  y(j) >= c(j)*m} với mọi j thuộc J, trong đó L là số cực lớn, m là giá trị tối thiểu của công suất nhà máy
+ Rằng buộc dạng tuyến tính của ( nếu c(j) = 0 thì y(j) = 0 và nếu c(j) = 1 thì y(j) >= m )
+
++con4: {y(j) = sigma của i từ i=1 đến i=N của (x(i,j) * d(i))} với mọi j thuộc J
+ Tổng công suất cần xử lý của ngày thứ j
+
++con5: {z >= y(j)} và {y[j] - t + (1 - c[j])*L >= 0} với mọi j thuộc J
+ Rằng buộc để cân bằng công suất các ngày bằng cách cho z-t min
+
+
+
+Sử dụng ortools để giải bài toán dưới dạng MIP với objective fuction là min(z-t)
