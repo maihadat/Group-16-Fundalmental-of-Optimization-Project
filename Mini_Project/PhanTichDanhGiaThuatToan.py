@@ -17,7 +17,7 @@ def Analysis_and_Comparison_Data_Table(filelist: list):
         N, M, m, d, s, e = cp.input(filename)
         #BranchAndBound
         f_max_opt, f_min_opt, z, tim = bnb.BranchAndBound(filename)
-        #bnb_data.append((f_max_opt, tim))
+        #bnb_data.append((f_max_opt - f_min_opt, tim))
         bnb_data.append((f_max_opt-f_min_opt)/sum(d))
 
 
@@ -27,7 +27,7 @@ def Analysis_and_Comparison_Data_Table(filelist: list):
         h.N, h.M, h.m, h.d, h.s, h.e =  N, M, m, d, s, e
         c = h.grand_change_of_plans()
         end = time.time()
-        #h_data.append((max(h.production(c)), end - start))
+        #h_data.append((max(h.production(c))-bnb.min_diff_zero(h.production(c)), end - start))
         h_data.append((max(h.production(c)) - bnb.min_diff_zero(h.production(c)))/sum(d))
 
         #Cp_model
@@ -36,13 +36,14 @@ def Analysis_and_Comparison_Data_Table(filelist: list):
         k.getInput(N, M, m, d, s, e)
         k.Solver()
         if k.time <= 1800:
-            #cp_data.append((k.z, k.time))
+            #cp_data.append((k.z - k.t, k.time))
             cp_data.append((k.z - k.t)/sum(d))
         else:
             cp_data.append((None, None))
 
         #Mip_model
         if vp.vegetables_planning(filename, False, False, False)[1] <= 1800:
+            #mip_data.append((vp.vegetables_planning(filename, False, False, False)[0]-vp.vegetables_planning(filename, False, False, False)[1],vp.vegetables_planning(filename, False, False, False)[2])
             mip_data.append((vp.vegetables_planning(filename, False, False, False)[0]-vp.vegetables_planning(filename, False, False, False)[1])/sum(d))
         else:
             mip_data.append((None, None))
