@@ -31,7 +31,7 @@ def Branch(k :int):
                 h = min_diff_zero(f) + (sum(d) -sum(f))
                 #lower bound
                 diff = g - h
-                if diff < f_max_diff and g < f_max_opt and h > f_min_opt:
+                if diff < f_max_diff and g <= f_max_opt and h >= f_min_opt:
                     Branch(k+1)
             f[v] -= data[k-1][0]
 
@@ -47,7 +47,7 @@ def BranchAndBound(filename):
     z = []
     x = [0]*(N+1)
     f = [0]*(max(e)+1)
-    f_max_diff = M - m
+    f_max_diff = M - m + 1
     f_max_opt = M
     f_min_opt = m
     Branch(1)
