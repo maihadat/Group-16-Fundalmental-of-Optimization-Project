@@ -71,7 +71,9 @@ def grand_change_of_plans():                               #Hàm chọn ra kế 
     r = M
     true_plan = None
     start = time.time()
-    for i in range(0,1000):
+    while True:
+        if time.time() - start > 60:
+            return true_plan
         pl = change_of_plan(first_plan())
         pr = production(pl)
         pr.sort()
