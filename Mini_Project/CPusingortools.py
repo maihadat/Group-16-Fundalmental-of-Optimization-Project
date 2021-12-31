@@ -155,7 +155,7 @@ class LapKeHoachThuHoachNongSan():
 
 
 if __name__ == '__main__':
-    n = '0'
+    n = '5'
     filename = 'MyData\data%s.txt'%(n)
     #da.export_to_txt(filename, da.GenData(50,40,25,50)) #tạo file test vs tên file như trên :)))
     N, M, m, d, s, e = input(filename)

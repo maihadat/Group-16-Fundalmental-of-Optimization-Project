@@ -3,8 +3,9 @@ import MyData as da
 import heuristic_Giang as h
 import Vegetables_planning_using_MIP_Dat as vp
 import branch_and_bound as bnb
+import simulated_annealling as sa
 import time
-
+from IPython.display import display
 import pandas as pd
 import matplotlib.pyplot as plt
 
@@ -12,14 +13,20 @@ import matplotlib.pyplot as plt
 def Analysis_and_Comparison_Data_Table(filelist: list):
     '''The table for analyzing and comparing'''
 
-    cp_data, mip_data, h_data, bnb_data = [], [], [], []
+    cp_data, mip_data, h_data, bnb_data, sa_data = [], [], [], [], []
     for filename in filelist:
         N, M, m, d, s, e = cp.input(filename)
         #BranchAndBound
         f_max_opt, f_min_opt, z, tim = bnb.BranchAndBound(filename)
-        #bnb_data.append((f_max_opt - f_min_opt, tim))
-        bnb_data.append((f_max_opt-f_min_opt)/sum(d))
+        bnb_data.append((f_max_opt - f_min_opt, tim))
+        #bnb_data.append((f_max_opt-f_min_opt)/sum(d))
 
+
+        #Simulated_annealing
+        start1 = time.time()
+        solution = sa.simulated_annealing(sa.objective, 1000, 100, filename)[2]
+        end1 = time.time()
+        sa_data.append((solution[-1][-1], end1 -start1))
 
 
         #Heuristic
@@ -27,8 +34,8 @@ def Analysis_and_Comparison_Data_Table(filelist: list):
         h.N, h.M, h.m, h.d, h.s, h.e =  N, M, m, d, s, e
         c = h.grand_change_of_plans()
         end = time.time()
-        #h_data.append((max(h.production(c))-bnb.min_diff_zero(h.production(c)), end - start))
-        h_data.append((max(h.production(c)) - bnb.min_diff_zero(h.production(c)))/sum(d))
+        h_data.append((max(h.production(c))-bnb.min_diff_zero(h.production(c)), end - start))
+        #h_data.append((max(h.production(c)) - bnb.min_diff_zero(h.production(c)))/sum(d))
 
         #Cp_model
 
@@ -36,15 +43,15 @@ def Analysis_and_Comparison_Data_Table(filelist: list):
         k.getInput(N, M, m, d, s, e)
         k.Solver()
         if k.time <= 1800:
-            #cp_data.append((k.z - k.t, k.time))
-            cp_data.append((k.z - k.t)/sum(d))
+            cp_data.append((k.z - k.t, k.time))
+            #cp_data.append((k.z - k.t)/sum(d))
         else:
             cp_data.append((None, None))
 
         #Mip_model
         if vp.vegetables_planning(filename, False, False, False)[1] <= 1800:
-            #mip_data.append((vp.vegetables_planning(filename, False, False, False)[0]-vp.vegetables_planning(filename, False, False, False)[1],vp.vegetables_planning(filename, False, False, False)[2])
-            mip_data.append((vp.vegetables_planning(filename, False, False, False)[0]-vp.vegetables_planning(filename, False, False, False)[1])/sum(d))
+            mip_data.append((vp.vegetables_planning(filename, False, False, False)[0]-vp.vegetables_planning(filename, False, False, False)[1],vp.vegetables_planning(filename, False, False, False)[2]))
+            #mip_data.append((vp.vegetables_planning(filename, False, False, False)[0]-vp.vegetables_planning(filename, False, False, False)[1])/sum(d))
         else:
             mip_data.append((None, None))
 
@@ -52,7 +59,8 @@ def Analysis_and_Comparison_Data_Table(filelist: list):
             'Constraint Programming': cp_data,
             'Mixed Integer Programming': mip_data,
             'Heuristic': h_data,
-            'Branch And Bound': bnb_data
+            'Branch And Bound': bnb_data,
+            'Simulated Annealing': sa_data
             }
     df = pd.DataFrame(data, index = ['Data %i'%(i+1) for i in range(len(filelist))])
     print(df)
@@ -66,8 +74,8 @@ def Visualize(df):
     table = ax.table(cellText=df.values, colLabels=df.columns, loc='center')
 
     #modify table
-    table.set_fontsize(14)
-    table.scale(1, 1)
+    table.set_fontsize(20)
+    table.scale(1, 2)
     ax.axis('off')
 
     #display table
@@ -76,7 +84,7 @@ def Visualize(df):
 
 if __name__ == '__main__':
     #filelist = ['MyData\data.txt', 'MyData\data1.txt']
-    filelist = ['MyData\data%i.txt'%(i) for i in range(3)]
-
-    Analysis_and_Comparison_Data_Table(filelist)
-    Visualize(Analysis_and_Comparison_Data_Table(filelist))
+    filelist = ['MyData\data%i.txt'%(i) for i in range(6)]
+    pd.set_option('display.expand_frame_repr', False)
+    display(Analysis_and_Comparison_Data_Table(filelist))
+    #Visualize(Analysis_and_Comparison_Data_Table(filelist))

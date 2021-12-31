@@ -14,6 +14,7 @@ def GenData(N, Y, lb, ub):
     s = [0]*(N)
     e = [0]*(N)
     for i in range(len(solution)):
+        # day
         j = rd.randint(0,Y-1)
         if j != 0:
             if j - 2 > 0:
@@ -25,7 +26,9 @@ def GenData(N, Y, lb, ub):
         else:
             s[i] = rd.randint(Y-2,Y-1)+1
             e[i] = Y
+        # random the yield
         d[i] = rd.randint(lb,ub)
+        # random the position
         solution[i][j] = d[i]
     z = np.sum(solution,axis=0)
     M = int(max(z))

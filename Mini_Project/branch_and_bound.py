@@ -12,16 +12,18 @@ def min_diff_zero(l :list):
 def Branch(k :int):
     global f_max_opt, f, x, f_min_opt, start, f_max_diff
 
-    if time.time()-start > 1800:
+    if time.time()-start > 10:
         return
 
     for v in range(1,max(e)+1):
+        #data = [(d[i], i, s[i], e[i]) for i in range(N)]
         if v in [i for i in range(data[k-1][2], data[k-1][3]+1)]:
-            x[data[k-1][1]] = v
+            x[data[k-1][1]+1] = v
             f[v] += data[k-1][0]
             if k == N:
                 if max(f) - min_diff_zero(f) < f_max_diff:
                     f_max_diff = max(f) - min_diff_zero(f)
+                    print('Ngày cày các thửa ruộng: ',x,'Sản lượng các ngày: ',f,'Bound: ', f_max_diff)
                     z.append([f.copy(),x.copy()])
 
             else:
@@ -73,7 +75,7 @@ def PrintSolution(func):
 
 if __name__ == '__main__':
     # Tùy chỗ ông lưu file mà chỉnh directory nha
-    filename = 'MyData\data0.txt'
+    filename = 'MyData\data4.txt'
     # Dùng hàm BranchAndBound(filename) để lấy dữ liệu nha
     # BranchAndBound(filename)
     PrintSolution(BranchAndBound(filename))
